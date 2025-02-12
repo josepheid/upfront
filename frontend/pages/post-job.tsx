@@ -191,7 +191,6 @@ const Step1 = ({
         event.preventDefault();
         setStep(2);
     };
-    const [isError, setIsError] = useState(false);
     return (
         <form onSubmit={handleSubmit}>
             <FormControl isRequired>
@@ -239,21 +238,25 @@ const Step1 = ({
             </FormControl>
             <Divider my="1rem" />
 
-            <FormControl isInvalid={isError} isRequired>
+            <FormControl isRequired>
                 <FormLabel>Company Logo URL</FormLabel>
                 <Input
                     size={"lg"}
                     id="companyLogoURL"
-                    type="url"
+                    type="file"
+                    accept="image/*"
                     placeholder="Company Logo URL"
                     onChange={(e) => {
-                        setIsError(false);
-                        setJobValues({
-                            ...jobValues,
-                            companyLogoURL: e.target.value,
-                        });
+                        if (e.target.files) {
+                            const file = URL.createObjectURL(
+                                e.target.files[0] as File
+                            );
+                            setJobValues({
+                                ...jobValues,
+                                companyLogoURL: file,
+                            });
+                        }
                     }}
-                    value={jobValues.companyLogoURL}
                 />
                 <Center my="1rem">
                     {jobValues.companyLogoURL === "" ? (
@@ -271,7 +274,6 @@ const Step1 = ({
                                 md: "100px",
                             }}
                             borderRadius={"5px"}
-                            onError={() => setIsError(true)}
                         />
                     )}
                 </Center>
@@ -284,11 +286,6 @@ const Step1 = ({
                     Data URLs will also work, for example:
                     data:image/png;base64,iVBORw0KGgoAAAANSUh...
                 </FormHelperText>
-                {isError && (
-                    <FormErrorMessage>
-                        Could not find image, please use a valid URL!
-                    </FormErrorMessage>
-                )}
             </FormControl>
             <Divider my={"1rem"} />
             <FormControl isRequired>
@@ -318,7 +315,6 @@ const Step1 = ({
                     type="submit"
                     color="white"
                     backgroundColor={"upfront.300"}
-                    disabled={isError}
                 >
                     Continue
                 </Button>

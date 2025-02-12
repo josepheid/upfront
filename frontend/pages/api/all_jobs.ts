@@ -8,10 +8,13 @@ interface searchParams {
 }
 // get checkout session to validate payment
 export async function getAllJobs(values?: searchParams) {
+    //TODO elasticsearch
     try {
         const url = `https://m7kkswah50.execute-api.eu-west-2.amazonaws.com/prod/upfront/job-posts?salary=${
             values?.salary ?? ""
-        }&title=${values?.title ?? ""}&location=${values?.location ?? ""}`;
+        }&title=${values?.title ?? ""}&location=${
+            values?.location.toLocaleUpperCase() ?? ""
+        }`;
         const getAllJobsResponse = await fetch(url, {
             method: "GET",
             headers: {
